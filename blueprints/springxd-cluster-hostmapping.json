@@ -1,0 +1,14 @@
+{ 
+  "blueprint" : "springxd-cluster-blueprint",
+  "default_password" : "secret-password",
+  "host_groups" : [
+    { 
+      "name" : "nodea_group",
+      "hosts": [ { "fqdn":"sg1.imatiasl.lan" } ] 
+    },
+    { 
+      "name" : "nodeb_group",
+      "hosts": [ { "fqdn":"sg2.imatiasl.lan" } ] 
+    } 
+  ] 
+}

@@ -1,0 +1,24 @@
+Based on the following Apache 2.0 Licensed (http://www.apache.org/licenses/LICENSE-2.0) public projects:
+
+https://github.com/chef/bento
+https://github.com/spark-mooc/mooc-setup/
+https://github.com/hortonworks/structor
+https://github.com/OZDevOps/task-3
+https://github.com/tzolov/vagrant-pivotalhd
+https://github.com/vangj/vagrant-hadoop-2.3.0
+https://github.com/njvijay/vagrant-jilla-hadoop
+https://github.com/vangj/vagrant-hadoop-2.4.1-spark-1.0.1
+
+And stuff collected from the Internet:
+
+https://courses.edx.org/courses/BerkeleyX/CS100.1x/1T2015/
+https://www.vagrantup.com/docs/
+https://www.packer.io/docs/
+http://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.3.4/index.html
+http://docs.spring.io/spring-xd/docs/1.3.x/reference/html/
+http://hawq.docs.pivotal.io/docs-hawq/topics/hawq-reference.html
+http://hadoop.apache.org/docs/stable/hadoop-project-dist/hadoop-common/ClusterSetup.html
+https://hadoop.apache.org/docs/stable/
+http://wiki.apache.org/hadoop/BindException
+http://www.cloudera.com/documentation/enterprise/latest/topics/cdh_ig_ports_cdh5.html
+http://www.datajilla.com/hadoop-cluster-using-vagrant/

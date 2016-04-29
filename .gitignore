@@ -1,0 +1,14 @@
+*.tar
+*.tar.*
+*.zip
+*.tgz
+*.log
+*.log.*
+*.sig
+*.rpm
+*.gz
+pkg/
+src/
+.vagrant/
+.DS_Store
+retail_demo/

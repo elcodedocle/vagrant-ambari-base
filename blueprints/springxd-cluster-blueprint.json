@@ -1,0 +1,101 @@
+{
+  "Blueprints" : {
+    "stack_name" : "HDP",
+    "stack_version" : "2.3",
+    "blueprint_name": "springxd-cluster-blueprint"
+  }, 
+  
+  "configurations" : [
+    {
+      "hive-site": {
+        "javax.jdo.option.ConnectionPassword": "admin",
+        "javax.jdo.option.ConnectionUserName": "hive"
+      }
+    },
+    {
+      "core-site": {
+        "hadoop.proxyuser.hbase.groups" : "*",
+        "hadoop.proxyuser.hbase.hosts" : "*",
+        "hadoop.proxyuser.hcat.groups" : "*",
+        "hadoop.proxyuser.hcat.hosts" : "*",
+        "hadoop.proxyuser.hive.groups" : "*",
+        "hadoop.proxyuser.hive.hosts" : "*",
+        "hadoop.proxyuser.hue.groups" : "*",
+        "hadoop.proxyuser.hue.hosts" : "*"
+      }
+    },
+    {
+      "nagios-env": {
+        "nagios_contact": "admin@localhost.com"
+      }
+    },
+    {
+      "springxd-site" : {
+        "hsql.server.port" : "9101",
+        "server.port" : "9393",
+        "spring.rabbitmq.addresses" : " ",
+        "spring.redis.host" : "ambari.localdomain",
+        "spring.redis.port" : "6379",
+        "xd.messagebus.kafka.brokers" : " ",
+        "xd.transport" : " redis"
+      }
+    }
+  ],
+  
+  "host_groups" : [
+    {
+      "name" : "nodea_group",
+      "configurations" : [ ],
+      "components" : [
+        {"name" : "SPRINGXDSHELL"},
+        {"name" : "SPRINGXDCONTAINER"},
+        {"name" : "NAMENODE"},
+        {"name" : "RESOURCEMANAGER"},
+        {"name" : "WEBHCAT_SERVER"},
+        {"name" : "DATANODE"},
+        {"name" : "NODEMANAGER"},
+        {"name" : "ZOOKEEPER_CLIENT"},
+        {"name" : "PIG"},
+        {"name" : "HCAT"},
+        {"name" : "TEZ_CLIENT"},
+        {"name" : "HDFS_CLIENT"},
+        {"name" : "HIVE_CLIENT"},
+        {"name" : "YARN_CLIENT"},
+        {"name" : "MAPREDUCE2_CLIENT"},
+        {"name" : "HBASE_REGIONSERVER"},
+        {"name" : "HBASE_CLIENT"}
+      ],
+      "cardinality" : "1"
+    },  
+    {
+      "name" : "nn_yarn_hive_hcat_workers_clients_group",
+      "configurations" : [ ],
+      "components" : [
+        {"name" : "NAMENODE"},
+        {"name" : "RESOURCEMANAGER"},
+        {"name" : "HIVE_SERVER"},
+        {"name" : "HIVE_METASTORE"},
+        {"name" : "MYSQL_SERVER"},
+        {"name" : "WEBHCAT_SERVER"},
+        {"name" : "DATANODE"},
+        {"name" : "NODEMANAGER"},
+        {"name" : "ZOOKEEPER_CLIENT"},
+        {"name" : "PIG"},
+        {"name" : "HCAT"},
+        {"name" : "TEZ_CLIENT"},
+        {"name" : "HDFS_CLIENT"},
+        {"name" : "HIVE_CLIENT"},
+        {"name" : "YARN_CLIENT"},
+        {"name" : "MAPREDUCE2_CLIENT"},
+        {"name" : "SPRINGXDHSQL"},
+        {"name" : "SPRINGXDADMIN"},
+        {"name" : "HISTORYSERVER"},
+        {"name" : "HBASE_REGIONSERVER"},
+        {"name" : "HBASE_MASTER"},
+        {"name" : "HBASE_CLIENT"},
+        {"name" : "APP_TIMELINE_SERVER"}
+      ],
+      "cardinality" : "1"
+    }
+  ]
+}
