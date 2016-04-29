@@ -1,6 +1,6 @@
-vagrant-springxd-base project
+vagrant-ambari-base project
 =============================
-#####*Base Spring XD project provisioning and orchestration for Smart Government HDFS/Hadoop-based clustered cloud platforms.*
+#####*Base project provisioning and orchestration for HDFS/Hadoop-based clustered cloud platforms.*
 
  Copyright (C) 2016 Imatia Innovation S.L.<br/>
  All rights reserved.<br />
