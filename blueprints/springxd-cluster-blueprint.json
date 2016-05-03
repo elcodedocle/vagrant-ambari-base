@@ -68,7 +68,7 @@
       "cardinality" : "1"
     },  
     {
-      "name" : "nn_yarn_hive_hcat_workers_clients_group",
+      "name" : "nodeb_group",
       "configurations" : [ ],
       "components" : [
         {"name" : "NAMENODE"},
