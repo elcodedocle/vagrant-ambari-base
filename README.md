@@ -13,7 +13,7 @@ vagrant-ambari-base project
  
 Depending on configuration settings, per node*:
  - 8-24 GB of RAM 
- - 1-2 dedicated x64 cores @ >2Ghz
+ - 1-8 dedicated x64 cores @ >2Ghz
  - A few hundred GB of HDD
  - 1-10Gb Ethernet LAN connection (preferrably dual)
  
