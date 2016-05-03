@@ -22,7 +22,7 @@ require 'json'
 AWS_REGION = "us-east-1"
 # Centos 6 with updates on us-east-1 (N. Virginia) AMI id 
 # ( See https://aws.amazon.com/marketplace/pp/B00A6KUVBW )
-AWS_AMI = "ami-bc8131d4"
+AWS_AMI = "ami-6d1c2007"
 AWS_INSTANCE_TYPE = "t2.micro"
 AWS_SSH_USERNAME = "centos"
 
@@ -40,7 +40,8 @@ CLUSTER_NAME = "CLUSTER_SG"
 # - bigdata/centos6.4_x86_64 - 40G disk space.
 # - bigdata/centos6.4_x86_64_small - just 8G of disk space. 
 # - bento/centos-6.7 - CentOS6.7 Vagrant box
-VM_BOX = "bento/centos-6.7"
+# - bento/centos-7.2 - CentOS7.2 Vagrant box
+VM_BOX = "bento/centos-7.2"
 VM_BOOT_TIMEOUT = 900
 
 #Memory allocated for the AMBARI VM
@@ -61,7 +62,7 @@ DEPLOY_BLUEPRINT_CLUSTER = TRUE
 ###############################################################################
 # Maps provisioning script to the supported stack
 INSTALL_AMBARI_STACK = {
-  "HDP2.3" => "provision/install_ambari.sh"
+  "HDP2.4" => "provision/install_ambari.sh"
 }
 
 AMBARI_HOSTNAME_FQDN = "#{AMBARI_HOSTNAME_PREFIX}.localdomain"
