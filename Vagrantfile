@@ -20,8 +20,8 @@ require 'json'
 #   AWS_KEYPATH - Route to .pem keyfile matching the selected SSH key
 # Configuration of AWS EC2 deployment:
 AWS_REGION = "us-east-1"
-# Centos 6 with updates on us-east-1 (N. Virginia) AMI id 
-# ( See https://aws.amazon.com/marketplace/pp/B00A6KUVBW )
+# Centos 7 with updates on us-east-1 (N. Virginia) AMI id 
+# ( See https://aws.amazon.com/marketplace/pp/B00O7WM7QW )
 AWS_AMI = "ami-6d1c2007"
 AWS_INSTANCE_TYPE = "t2.micro"
 AWS_SSH_USERNAME = "centos"
