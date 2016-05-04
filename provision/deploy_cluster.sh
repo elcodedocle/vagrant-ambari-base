@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Deploy HDP2.3 Cluster and Services using Ambari Blueprint
+# Deploy HDP2.4 Cluster and Services using Ambari Blueprint
 
 
 [ "$#" -ne 5 ] && (echo "Expects 5 input agreements but found: $#"; exit 1)
