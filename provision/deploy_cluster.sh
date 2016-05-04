@@ -21,7 +21,7 @@ BLUEPRINT_FILE=$4
 HOST_MAPPING_FILE=$5
 
 echo "********************************************************************************"
-echo " Deploy HDP2.3 Cluster: $CLUSTER_NAME , Blueprint: $BLUEPRINT_NAME       "
+echo " Deploy HDP2.4 Cluster: $CLUSTER_NAME , Blueprint: $BLUEPRINT_NAME       "
 echo "********************************************************************************"
 
 # cat $BLUEPRINT_FILE
