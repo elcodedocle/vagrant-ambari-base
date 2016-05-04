@@ -1,6 +1,6 @@
 vagrant-ambari-base project
 =============================
-#####*Base project provisioning and orchestration for HDFS/Hadoop-based clustered cloud platforms.*
+#####*Base project providing provisioning and orchestration for HDFS/Hadoop-based clustered cloud platforms.*
 
  Copyright (C) 2016 Imatia Innovation S.L.<br/>
  All rights reserved.<br />
