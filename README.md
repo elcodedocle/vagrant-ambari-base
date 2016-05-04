@@ -24,7 +24,7 @@ git clone https://bitbucket.org/imatia/vagrant-springxd-base
 ```
  - Generate a keypair on the project root folder:
 ```bash
-cd vagrant-springxd-base
+cd vagrant-ambari-base
 openssl genpkey -algorithm RSA -out id_rsa -pkeyopt rsa_keygen_bits:2048
 openssl rsa -pubout -in id_rsa -out id_rsa.pub
 ```
