@@ -20,7 +20,7 @@ Depending on configuration settings, per node*:
 ### How to use
  - Clone the repo:
 ```bash
-git clone https://bitbucket.org/imatia/vagrant-springxd-base
+git clone https://bitbucket.org/imatia/vagrant-ambari-base
 ```
  - Generate a keypair on the project root folder:
 ```bash
@@ -33,7 +33,7 @@ openssl rsa -pubout -in id_rsa -out id_rsa.pub
 ```bash
 vagrant up
 ```
- - Navigate to the dashboard on http://ambari.localdomain:8080/main/dashboard
+ - Navigate to the dashboard on http://ambari.imatiasl.lan:8080/main/dashboard
 
 ### Acks
 
