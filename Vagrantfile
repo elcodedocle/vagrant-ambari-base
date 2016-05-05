@@ -30,6 +30,8 @@ AWS_SSH_USERNAME = "centos"
 # Ambari host will have also a randomly assigned public ip
 # (If you want to associate your own elastic ip check elastic_ip parameter)
 AWS_VPC_SUBNET_ID = "subnet-c8620c90"
+AWS_AMBARI_EBS_DISK_SIZE_GB = 100
+AWS_NODE_EBS_DISK_SIZE_GB = 200
 
 # must be located on /blueprints subfolder
 BLUEPRINT_FILE_NAME = "springxd-cluster-blueprint.json"
@@ -152,6 +154,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         aws.subnet_id = AWS_VPC_SUBNET_ID
         aws.private_ip_address = "10.7.0.#{i + 91}"
         aws.associate_public_ip = false
+        aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_NODE_EBS_DISK_SIZE_GB }]
       end
 
       hdp_conf.vm.host_name = hdp_host_name
@@ -196,6 +199,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      aws.subnet_id = AWS_VPC_SUBNET_ID
      aws.private_ip_address = "10.7.0.91"
      aws.associate_public_ip = true
+     aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_AMBARI_EBS_DISK_SIZE_GB }]
    end
 
    ambari.vm.provider "aws" do |v|
