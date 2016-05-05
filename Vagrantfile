@@ -23,7 +23,10 @@ AWS_REGION = "us-east-1"
 # Centos 7 with updates on us-east-1 (N. Virginia) AMI id 
 # ( See https://aws.amazon.com/marketplace/pp/B00O7WM7QW )
 AWS_AMI = "ami-6d1c2007"
-AWS_INSTANCE_TYPE = "m3.large"
+# Must be EBS-based. 8GB RAM, 2 vCores minimum recommended
+AWS_AMBARI_INSTANCE_TYPE = "m4.large"
+# Must be EBS-based. 8GB RAM, 2 vCores minimum recommended
+AWS_INSTANCE_TYPE = "m4.large"
 AWS_SSH_USERNAME = "centos"
 # The AWS VPC subnet where the cluster will be deployed. 
 # It should be configured with CIDR mask 10.7.0.0/24
@@ -146,7 +149,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         aws.secret_access_key = ENV['AWS_SECRET_KEY']
         aws.keypair_name = ENV['AWS_KEYNAME']
         aws.ami = AWS_AMI
-        aws.instance_type = AWS_INSTANCE_TYPE
+        aws.instance_type = AWS_AMBARI_INSTANCE_TYPE
         aws.region = ENV['AWS_REGION']
         aws.security_groups = "Vagrant"
         override.ssh.username = AWS_SSH_USERNAME
