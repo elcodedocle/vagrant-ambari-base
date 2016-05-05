@@ -25,7 +25,11 @@ AWS_REGION = "us-east-1"
 AWS_AMI = "ami-6d1c2007"
 AWS_INSTANCE_TYPE = "m3.large"
 AWS_SSH_USERNAME = "centos"
-
+# The AWS VPC subnet where the cluster will be deployed. 
+# It should be configured with CIDR mask 10.7.0.0/24
+# Ambari host will have also a randomly assigned public ip
+# (If you want to associate your own elastic ip check elastic_ip parameter)
+AWS_VPC_SUBNET_ID = "subnet-c8620c90"
 
 # must be located on /blueprints subfolder
 BLUEPRINT_FILE_NAME = "springxd-cluster-blueprint.json"
@@ -145,9 +149,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         aws.security_groups = "Vagrant"
         override.ssh.username = AWS_SSH_USERNAME
         override.ssh.private_key_path = ENV['AWS_KEYPATH']
+        aws.subnet_id = AWS_VPC_SUBNET_ID
+        aws.private_ip_address = "10.7.0.#{i + 91}"
+        aws.associate_public_ip = false
       end
 
       hdp_conf.vm.host_name = hdp_host_name
+      # will be ignored by aws provider (use aws.private_ip_address instead):
       hdp_conf.vm.network :private_network, ip: "10.7.0.#{i + 91}"
 
       hdp_conf.vm.provision "shell" do |s|
@@ -174,13 +182,30 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      v.customize ["modifyvm", :id, "--memory", AMBARI_NODE_VM_MEMORY_MB]
    end
 
-   ambari.vm.provider "vmware_fusion" do |v|
+   ambari.vm.provider "vmware_fusion" do |v||aws, override|
+     aws.name = AMBARI_VM_NAME
+     aws.access_key_id = ENV['AWS_ACCESS_KEY']
+     aws.secret_access_key = ENV['AWS_SECRET_KEY']
+     aws.keypair_name = ENV['AWS_KEYNAME']
+     aws.ami = AWS_AMI
+     aws.instance_type = AWS_INSTANCE_TYPE
+     aws.region = ENV['AWS_REGION']
+     aws.security_groups = "Vagrant"
+     override.ssh.username = AWS_SSH_USERNAME
+     override.ssh.private_key_path = ENV['AWS_KEYPATH']
+     aws.subnet_id = AWS_VPC_SUBNET_ID
+     aws.private_ip_address = "10.7.0.91"
+     aws.associate_public_ip = true
+   end
+
+   ambari.vm.provider "aws" do |v|
      v.name = AMBARI_VM_NAME
      v.vmx["memsize"]  = AMBARI_NODE_VM_MEMORY_MB
    end
 
    ambari.vm.hostname = AMBARI_HOSTNAME_FQDN
-   ambari.vm.network :private_network, ip: "10.7.0.91"
+   # will be ignored by aws provider (use aws.private_ip_address instead):
+   ambari.vm.network :private_network, ip: "10.7.0.91" 
 #   ambari.vm.network :forwarded_port, guest: 8080, host: 8080
 
    # Initialization common for all nodes
