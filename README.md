@@ -1,6 +1,6 @@
-vagrant-springxd-base project
+vagrant-ambari-base project
 =============================
-#####*Base Spring XD project provisioning and orchestration for Smart Government HDFS/Hadoop-based clustered cloud platforms.*
+#####*Base project providing provisioning and orchestration for HDFS/Hadoop-based clustered cloud platforms.*
 
  Copyright (C) 2016 Imatia Innovation S.L.<br/>
  All rights reserved.<br />
@@ -13,18 +13,18 @@ vagrant-springxd-base project
  
 Depending on configuration settings, per node*:
  - 8-24 GB of RAM 
- - 1-2 dedicated x64 cores @ >2Ghz
+ - 1-8 dedicated x64 cores @ >2Ghz
  - A few hundred GB of HDD
  - 1-10Gb Ethernet LAN connection (preferrably dual)
  
 ### How to use
  - Clone the repo:
 ```bash
-git clone https://bitbucket.org/imatia/vagrant-springxd-base
+git clone https://bitbucket.org/imatia/vagrant-ambari-base
 ```
  - Generate a keypair on the project root folder:
 ```bash
-cd vagrant-springxd-base
+cd vagrant-ambari-base
 openssl genpkey -algorithm RSA -out id_rsa -pkeyopt rsa_keygen_bits:2048
 openssl rsa -pubout -in id_rsa -out id_rsa.pub
 ```
@@ -33,7 +33,7 @@ openssl rsa -pubout -in id_rsa -out id_rsa.pub
 ```bash
 vagrant up
 ```
- - Navigate to the dashboard on http://ambari.localdomain:8080/main/dashboard
+ - Navigate to the dashboard on http://ambari.imatiasl.lan:8080/main/dashboard
 
 ### Acks
 

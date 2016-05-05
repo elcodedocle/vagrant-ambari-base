@@ -1,6 +1,6 @@
 ## Ambari Blueprints
 
-[Ambari Blueprints](http://docs.hortonworks.com/HDPDocuments/Ambari-2.1.2.1/bk_ambari_reference_guide/content/ch_using_ambari_blueprints.html) provide an API to perform cluster installations. You can build a reusable “blueprint” that defines which Stack to use, how Service Components should be laid-out across a cluster, and what configurations to set.
+[Ambari Blueprints](http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.1.1/bk_ambari_reference_guide/content/ch_using_ambari_blueprints.html) provide an API to perform cluster installations. You can build a reusable “blueprint” that defines which Stack to use, how Service Components should be laid-out across a cluster, and what configurations to set.
 
 You can create your own blueprint file and select it through the [Vagrantfile](../Vagrantfile) `BLUEPRINT_FILE_NAME` property. 
 
@@ -11,7 +11,7 @@ You can build your own host-mapping file and select it through the [Vagrantfile]
 
 ###### Stacks
 Currently the following stacks are supported: 
-* HDP2.3 - Hortonworks 2.3, Ambari 2.1.2
+* HDP2.4 - Hortonworks 2.4, Ambari 2.2.1
 _Note: All custom `blueprints` and `host-mapping` files must be stored in the `/blueprints` subfolder!_
 
 #### Host Mapping Name Convention
@@ -24,9 +24,9 @@ Follow this convention in your **Host Mapping** specs or Vagrantfile will not be
 
 ## Predefined Blueprints and Host-Mappings
 
-#### Hortonworks HDP2.3, Ambari-2.1 Blueprints
+#### Hortonworks HDP2.4, Ambari-2.2 Blueprints
 
-The [springxd-cluster-blueprint.json](springxd-cluster-blueprint.json) and [springxd-cluster-hostmapping.json](springxd-cluster-hostmapping.json) spec defines a 4 node cluster.
+The [springxd-cluster-blueprint.json](springxd-cluster-blueprint.json) and [springxd-cluster-hostmapping.json](springxd-cluster-hostmapping.json) spec defines a 2 node proof-of-concept cluster.
 
 Host name        | Components
 ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -20,12 +20,21 @@ require 'json'
 #   AWS_KEYPATH - Route to .pem keyfile matching the selected SSH key
 # Configuration of AWS EC2 deployment:
 AWS_REGION = "us-east-1"
-# Centos 6 with updates on us-east-1 (N. Virginia) AMI id 
-# ( See https://aws.amazon.com/marketplace/pp/B00A6KUVBW )
-AWS_AMI = "ami-bc8131d4"
-AWS_INSTANCE_TYPE = "t2.micro"
+# Centos 7 with updates on us-east-1 (N. Virginia) AMI id 
+# ( See https://aws.amazon.com/marketplace/pp/B00O7WM7QW )
+AWS_AMI = "ami-6d1c2007"
+# Must be EBS-based. 8GB RAM, 2 vCores minimum recommended
+AWS_AMBARI_INSTANCE_TYPE = "m4.large"
+# Must be EBS-based. 8GB RAM, 2 vCores minimum recommended
+AWS_INSTANCE_TYPE = "m4.large"
 AWS_SSH_USERNAME = "centos"
-
+# The AWS VPC subnet where the cluster will be deployed. 
+# It should be configured with CIDR mask 10.7.0.0/24
+# Ambari host will have also a randomly assigned public ip
+# (If you want to associate your own elastic ip check elastic_ip parameter)
+AWS_VPC_SUBNET_ID = "subnet-c8620c90"
+AWS_AMBARI_EBS_DISK_SIZE_GB = 100
+AWS_NODE_EBS_DISK_SIZE_GB = 200
 
 # must be located on /blueprints subfolder
 BLUEPRINT_FILE_NAME = "springxd-cluster-blueprint.json"
@@ -40,7 +49,8 @@ CLUSTER_NAME = "CLUSTER_SG"
 # - bigdata/centos6.4_x86_64 - 40G disk space.
 # - bigdata/centos6.4_x86_64_small - just 8G of disk space. 
 # - bento/centos-6.7 - CentOS6.7 Vagrant box
-VM_BOX = "bento/centos-6.7"
+# - bento/centos-7.2 - CentOS7.2 Vagrant box
+VM_BOX = "bento/centos-7.2"
 VM_BOOT_TIMEOUT = 900
 
 #Memory allocated for the AMBARI VM
@@ -61,7 +71,7 @@ DEPLOY_BLUEPRINT_CLUSTER = TRUE
 ###############################################################################
 # Maps provisioning script to the supported stack
 INSTALL_AMBARI_STACK = {
-  "HDP2.3" => "provision/install_ambari.sh"
+  "HDP2.4" => "provision/install_ambari.sh"
 }
 
 AMBARI_HOSTNAME_FQDN = "#{AMBARI_HOSTNAME_PREFIX}.localdomain"
@@ -139,14 +149,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         aws.secret_access_key = ENV['AWS_SECRET_KEY']
         aws.keypair_name = ENV['AWS_KEYNAME']
         aws.ami = AWS_AMI
-        aws.instance_type = AWS_INSTANCE_TYPE
+        aws.instance_type = AWS_AMBARI_INSTANCE_TYPE
         aws.region = ENV['AWS_REGION']
         aws.security_groups = "Vagrant"
         override.ssh.username = AWS_SSH_USERNAME
         override.ssh.private_key_path = ENV['AWS_KEYPATH']
+        aws.subnet_id = AWS_VPC_SUBNET_ID
+        aws.private_ip_address = "10.7.0.#{i + 91}"
+        aws.associate_public_ip = false
+        aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_NODE_EBS_DISK_SIZE_GB }]
       end
 
       hdp_conf.vm.host_name = hdp_host_name
+      # will be ignored by aws provider (use aws.private_ip_address instead):
       hdp_conf.vm.network :private_network, ip: "10.7.0.#{i + 91}"
 
       hdp_conf.vm.provision "shell" do |s|
@@ -173,13 +188,31 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      v.customize ["modifyvm", :id, "--memory", AMBARI_NODE_VM_MEMORY_MB]
    end
 
-   ambari.vm.provider "vmware_fusion" do |v|
+   ambari.vm.provider "vmware_fusion" do |v||aws, override|
+     aws.name = AMBARI_VM_NAME
+     aws.access_key_id = ENV['AWS_ACCESS_KEY']
+     aws.secret_access_key = ENV['AWS_SECRET_KEY']
+     aws.keypair_name = ENV['AWS_KEYNAME']
+     aws.ami = AWS_AMI
+     aws.instance_type = AWS_INSTANCE_TYPE
+     aws.region = ENV['AWS_REGION']
+     aws.security_groups = "Vagrant"
+     override.ssh.username = AWS_SSH_USERNAME
+     override.ssh.private_key_path = ENV['AWS_KEYPATH']
+     aws.subnet_id = AWS_VPC_SUBNET_ID
+     aws.private_ip_address = "10.7.0.91"
+     aws.associate_public_ip = true
+     aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_AMBARI_EBS_DISK_SIZE_GB }]
+   end
+
+   ambari.vm.provider "aws" do |v|
      v.name = AMBARI_VM_NAME
      v.vmx["memsize"]  = AMBARI_NODE_VM_MEMORY_MB
    end
 
    ambari.vm.hostname = AMBARI_HOSTNAME_FQDN
-   ambari.vm.network :private_network, ip: "10.7.0.91"
+   # will be ignored by aws provider (use aws.private_ip_address instead):
+   ambari.vm.network :private_network, ip: "10.7.0.91" 
 #   ambari.vm.network :forwarded_port, guest: 8080, host: 8080
 
    # Initialization common for all nodes

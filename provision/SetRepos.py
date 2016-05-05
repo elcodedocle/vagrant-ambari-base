@@ -17,7 +17,7 @@ def getRepos():
     hostName = socket.getfqdn()
     headers = {"X-Requested-By": "Heffalump"}
     auth = HTTPBasicAuth('admin', 'admin')
-    url = "http://" + hostName + ":8080/api/v1/stacks/" + stack_name + "/versions/" + stack_version + "/operating_systems/redhat6/repositories/"
+    url = "http://" + hostName + ":8080/api/v1/stacks/" + stack_name + "/versions/" + stack_version + "/operating_systems/redhat7/repositories/"
     print url
     repos = json.loads(requests.get(url, auth=auth).text)["items"]
     for repo in repos:
