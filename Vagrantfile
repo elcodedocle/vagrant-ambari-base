@@ -75,6 +75,8 @@ DEPLOY_BLUEPRINT_CLUSTER = TRUE
 # PROXMOX_USER_NAME
 # PROXMOX_PASSWORD
 # PROXMOX_ENDPOINT
+PROXMOX_AMBARI_QEMU_TEMPLATE = 'local:vztmpl/centos-7-default.tar.gz'
+PROXMOX_NODE_QEMU_TEMPLATE = 'local:vztmpl/centos-7-default.tar.gz'
 PROXMOX_AMBARI_DISK_SIZE = "100GB"
 PROXMOX_NODE_DISK_SIZE = "200GB"
 PROXMOX_ID_RANGE_START = 300
@@ -184,7 +186,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         proxmox.vm_type = :qemu
         proxmox.qemu_os = :l26
         proxmox.qemu_storage = 'local'
-        proxmox.qemu_iso_file = '/home/user/system.iso'
+        proxmox.qemu_template = PROXMOX_AMBARI_QEMU_TEMPLATE
         proxmox.qemu_cores = 2
         proxmox.qemu_sockets = 1
         proxmox.qemu_nic_model = 'virtio'
@@ -247,7 +249,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       proxmox.vm_type = :qemu
       proxmox.qemu_os = :l26
       proxmox.qemu_storage = 'local'
-      proxmox.qemu_iso_file = '/home/user/system.iso'
+      proxmox.qemu_template = PROXMOX_NODE_QEMU_TEMPLATE
       proxmox.qemu_cores = 2
       proxmox.qemu_sockets = 1
       proxmox.qemu_nic_model = 'virtio'
