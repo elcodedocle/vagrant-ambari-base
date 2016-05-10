@@ -63,7 +63,7 @@ AMBARI_NODE_VM_MEMORY_MB = "6144"
 # Memory allocated per HDP node
 HDP_NODE_VM_MEMORY_MB = "5120"
 
-# Ambari host name prefix. Suffix fixed to '.localdomain'.
+# Ambari host name prefix. Suffix fixed to '.imatiasl.lan'.
 AMBARI_HOSTNAME_PREFIX = "ambari"
 
 # TRUE to deploy a cluster defined with BLUEPRINT_FILE_NAME and HOST_MAPPING_FILE_NAME.
