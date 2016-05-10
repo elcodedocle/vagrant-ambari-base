@@ -50,6 +50,10 @@ CLUSTER_NAME = "CLUSTER_SG"
 # - bigdata/centos6.4_x86_64_small - just 8G of disk space. 
 # - bento/centos-6.7 - CentOS6.7 Vagrant box
 # - bento/centos-7.2 - CentOS7.2 Vagrant box
+# For AWS:
+# - andytson/aws-dummy
+# For Proxmox:
+# - See https://github.com/telcat/vagrant-proxmox/tree/master/dummy_box
 VM_BOX = "bento/centos-7.2"
 VM_BOOT_TIMEOUT = 900
 
@@ -59,12 +63,23 @@ AMBARI_NODE_VM_MEMORY_MB = "6144"
 # Memory allocated per HDP node
 HDP_NODE_VM_MEMORY_MB = "5120"
 
-# Ambari host name prefix. Suffix fixed to '.localdomain'.
+# Ambari host name prefix. Suffix fixed to '.imatiasl.lan'.
 AMBARI_HOSTNAME_PREFIX = "ambari"
 
 # TRUE to deploy a cluster defined with BLUEPRINT_FILE_NAME and HOST_MAPPING_FILE_NAME.
 # FALSE to stop the installation after the Ambari Server installation. 
 DEPLOY_BLUEPRINT_CLUSTER = TRUE
+
+# Proxmox provider settings:
+# The following environment variables must be set:
+# PROXMOX_USER_NAME
+# PROXMOX_PASSWORD
+# PROXMOX_ENDPOINT
+PROXMOX_AMBARI_QEMU_TEMPLATE = 'local:vztmpl/centos-7-default.tar.gz'
+PROXMOX_NODE_QEMU_TEMPLATE = 'local:vztmpl/centos-7-default.tar.gz'
+PROXMOX_AMBARI_DISK_SIZE = "100GB"
+PROXMOX_NODE_DISK_SIZE = "200GB"
+PROXMOX_ID_RANGE_START = 300
 
 ###############################################################################
 #    END CONFIG PARAMETERS
@@ -159,6 +174,24 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         aws.associate_public_ip = false
         aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_NODE_EBS_DISK_SIZE_GB }]
       end
+      
+      config.vm.provider :proxmox do |proxmox|
+        proxmox.endpoint = env['PROXMOX_ENDPOINT']
+        proxmox.user_name = env['PROXMOX_USER_NAME']
+        proxmox.password = env['PROXMOX_PASSWORD']
+        proxmox.vm_memory = HDP_NODE_VM_MEMORY_MB
+        proxmox.qemu_disk_size = PROXMOX_NODE_DISK_SIZE
+        proxmox.vm_name_prefix = CLUSTER_NAME + '_'
+        proxmox.vm_id_range = (PROXMOX_ID_RANGE_START + 1)..(PROXMOX_ID_RANGE_START + 1 + NUMBER_OF_CLUSTER_NODES)
+        proxmox.vm_type = :qemu
+        proxmox.qemu_os = :l26
+        proxmox.qemu_storage = 'local'
+        proxmox.qemu_template = PROXMOX_AMBARI_QEMU_TEMPLATE
+        proxmox.qemu_cores = 2
+        proxmox.qemu_sockets = 1
+        proxmox.qemu_nic_model = 'virtio'
+        proxmox.qemu_bridge = 'vmbr0'
+      end
 
       hdp_conf.vm.host_name = hdp_host_name
       # will be ignored by aws provider (use aws.private_ip_address instead):
@@ -188,7 +221,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      v.customize ["modifyvm", :id, "--memory", AMBARI_NODE_VM_MEMORY_MB]
    end
 
-   ambari.vm.provider "vmware_fusion" do |v||aws, override|
+   ambari.vm.provider "aws" do |v||aws, override|
      aws.name = AMBARI_VM_NAME
      aws.access_key_id = ENV['AWS_ACCESS_KEY']
      aws.secret_access_key = ENV['AWS_SECRET_KEY']
@@ -204,8 +237,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      aws.associate_public_ip = true
      aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_AMBARI_EBS_DISK_SIZE_GB }]
    end
+      
+    config.vm.provider :proxmox do |proxmox|
+      proxmox.endpoint = env['PROXMOX_ENDPOINT']
+      proxmox.user_name = env['PROXMOX_USER_NAME']
+      proxmox.password = env['PROXMOX_PASSWORD']
+      proxmox.vm_memory = AMBARI_NODE_VM_MEMORY_MB
+      proxmox.qemu_disk_size = PROXMOX_AMBARI_DISK_SIZE
+      proxmox.vm_name_prefix = CLUSTER_NAME + '_AMBARI_'
+      proxmox.vm_id_range = PROXMOX_ID_RANGE_START..PROXMOX_ID_RANGE_START
+      proxmox.vm_type = :qemu
+      proxmox.qemu_os = :l26
+      proxmox.qemu_storage = 'local'
+      proxmox.qemu_template = PROXMOX_NODE_QEMU_TEMPLATE
+      proxmox.qemu_cores = 2
+      proxmox.qemu_sockets = 1
+      proxmox.qemu_nic_model = 'virtio'
+      proxmox.qemu_bridge = 'vmbr0'
+    end
 
-   ambari.vm.provider "aws" do |v|
+   ambari.vm.provider "vmware_fusion" do |v|
      v.name = AMBARI_VM_NAME
      v.vmx["memsize"]  = AMBARI_NODE_VM_MEMORY_MB
    end
