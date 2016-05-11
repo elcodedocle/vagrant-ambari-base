@@ -173,6 +173,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         aws.private_ip_address = "10.7.0.#{i + 91}"
         aws.elastic_ip = true
         aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_NODE_EBS_DISK_SIZE_GB }]
+        aws.user_data = File.read("user_data.txt")
       end
       
       config.vm.provider :proxmox do |proxmox|
@@ -235,6 +236,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      aws.private_ip_address = "10.7.0.91"
      aws.elastic_ip = true
      aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_AMBARI_EBS_DISK_SIZE_GB }]
+     aws.user_data = File.read("user_data.txt")
    end
       
     config.vm.provider :proxmox do |proxmox|
