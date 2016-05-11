@@ -176,9 +176,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
       
       config.vm.provider :proxmox do |proxmox|
-        proxmox.endpoint = env['PROXMOX_ENDPOINT']
-        proxmox.user_name = env['PROXMOX_USER_NAME']
-        proxmox.password = env['PROXMOX_PASSWORD']
+        proxmox.endpoint = ENV['PROXMOX_ENDPOINT']
+        proxmox.user_name = ENV['PROXMOX_USER_NAME']
+        proxmox.password = ENV['PROXMOX_PASSWORD']
         proxmox.vm_memory = HDP_NODE_VM_MEMORY_MB
         proxmox.qemu_disk_size = PROXMOX_NODE_DISK_SIZE
         proxmox.vm_name_prefix = CLUSTER_NAME + '_'
@@ -239,9 +239,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    end
       
     config.vm.provider :proxmox do |proxmox|
-      proxmox.endpoint = env['PROXMOX_ENDPOINT']
-      proxmox.user_name = env['PROXMOX_USER_NAME']
-      proxmox.password = env['PROXMOX_PASSWORD']
+      proxmox.endpoint = ENV['PROXMOX_ENDPOINT']
+      proxmox.user_name = ENV['PROXMOX_USER_NAME']
+      proxmox.password = ENV['PROXMOX_PASSWORD']
       proxmox.vm_memory = AMBARI_NODE_VM_MEMORY_MB
       proxmox.qemu_disk_size = PROXMOX_AMBARI_DISK_SIZE
       proxmox.vm_name_prefix = CLUSTER_NAME + '_AMBARI_'
