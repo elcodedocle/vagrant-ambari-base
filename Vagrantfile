@@ -33,6 +33,7 @@ AWS_SSH_USERNAME = "centos"
 # Ambari host will have also a randomly assigned public ip
 # (If you want to associate your own elastic ip check elastic_ip parameter)
 AWS_VPC_SUBNET_ID = "subnet-c8620c90"
+AWS_VPC_SECURITY_GROUP_ID = "sg-1301c268"
 AWS_AMBARI_EBS_DISK_SIZE_GB = 100
 AWS_NODE_EBS_DISK_SIZE_GB = 200
 
@@ -54,7 +55,7 @@ CLUSTER_NAME = "CLUSTER_SG"
 # - andytson/aws-dummy
 # For Proxmox:
 # - See https://github.com/telcat/vagrant-proxmox/tree/master/dummy_box
-VM_BOX = "bento/centos-7.2"
+VM_BOX = "andytson/aws-dummy"
 VM_BOOT_TIMEOUT = 900
 
 #Memory allocated for the AMBARI VM
@@ -159,26 +160,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
       
       hdp_conf.vm.provider :aws do |aws, override|
-        aws.name = hdp_vm_name
         aws.access_key_id = ENV['AWS_ACCESS_KEY']
         aws.secret_access_key = ENV['AWS_SECRET_KEY']
         aws.keypair_name = ENV['AWS_KEYNAME']
         aws.ami = AWS_AMI
         aws.instance_type = AWS_AMBARI_INSTANCE_TYPE
-        aws.region = ENV['AWS_REGION']
-        aws.security_groups = "Vagrant"
+        aws.region = AWS_REGION
+        aws.security_groups = AWS_VPC_SECURITY_GROUP_ID
         override.ssh.username = AWS_SSH_USERNAME
         override.ssh.private_key_path = ENV['AWS_KEYPATH']
         aws.subnet_id = AWS_VPC_SUBNET_ID
         aws.private_ip_address = "10.7.0.#{i + 91}"
-        aws.associate_public_ip = false
+        aws.elastic_ip = true
         aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_NODE_EBS_DISK_SIZE_GB }]
+        aws.user_data = File.read("user_data.txt")
       end
       
       config.vm.provider :proxmox do |proxmox|
-        proxmox.endpoint = env['PROXMOX_ENDPOINT']
-        proxmox.user_name = env['PROXMOX_USER_NAME']
-        proxmox.password = env['PROXMOX_PASSWORD']
+        proxmox.endpoint = ENV['PROXMOX_ENDPOINT']
+        proxmox.user_name = ENV['PROXMOX_USER_NAME']
+        proxmox.password = ENV['PROXMOX_PASSWORD']
         proxmox.vm_memory = HDP_NODE_VM_MEMORY_MB
         proxmox.qemu_disk_size = PROXMOX_NODE_DISK_SIZE
         proxmox.vm_name_prefix = CLUSTER_NAME + '_'
@@ -221,27 +222,27 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      v.customize ["modifyvm", :id, "--memory", AMBARI_NODE_VM_MEMORY_MB]
    end
 
-   ambari.vm.provider "aws" do |v||aws, override|
-     aws.name = AMBARI_VM_NAME
+   ambari.vm.provider "aws" do |aws, override|
      aws.access_key_id = ENV['AWS_ACCESS_KEY']
      aws.secret_access_key = ENV['AWS_SECRET_KEY']
      aws.keypair_name = ENV['AWS_KEYNAME']
      aws.ami = AWS_AMI
      aws.instance_type = AWS_INSTANCE_TYPE
-     aws.region = ENV['AWS_REGION']
-     aws.security_groups = "Vagrant"
+     aws.region = AWS_REGION
+     aws.security_groups = AWS_VPC_SECURITY_GROUP_ID
      override.ssh.username = AWS_SSH_USERNAME
      override.ssh.private_key_path = ENV['AWS_KEYPATH']
      aws.subnet_id = AWS_VPC_SUBNET_ID
      aws.private_ip_address = "10.7.0.91"
-     aws.associate_public_ip = true
+     aws.elastic_ip = true
      aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_AMBARI_EBS_DISK_SIZE_GB }]
+     aws.user_data = File.read("user_data.txt")
    end
       
     config.vm.provider :proxmox do |proxmox|
-      proxmox.endpoint = env['PROXMOX_ENDPOINT']
-      proxmox.user_name = env['PROXMOX_USER_NAME']
-      proxmox.password = env['PROXMOX_PASSWORD']
+      proxmox.endpoint = ENV['PROXMOX_ENDPOINT']
+      proxmox.user_name = ENV['PROXMOX_USER_NAME']
+      proxmox.password = ENV['PROXMOX_PASSWORD']
       proxmox.vm_memory = AMBARI_NODE_VM_MEMORY_MB
       proxmox.qemu_disk_size = PROXMOX_AMBARI_DISK_SIZE
       proxmox.vm_name_prefix = CLUSTER_NAME + '_AMBARI_'

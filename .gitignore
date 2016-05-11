@@ -13,4 +13,6 @@ src/
 .DS_Store
 retail_demo/
 id_rsa
+id_rsa*
 id_rsa.pub
+*.pem

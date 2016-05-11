@@ -1,0 +1,3 @@
+#cloud-config
+runcmd:
+  - echo 'Defaults:centos !requiretty' > /etc/sudoers.d/888-vagrant-cloud-init-requiretty
