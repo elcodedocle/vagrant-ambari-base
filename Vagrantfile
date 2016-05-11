@@ -159,7 +159,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
       
       hdp_conf.vm.provider :aws do |aws, override|
-        aws.name = hdp_vm_name
         aws.access_key_id = ENV['AWS_ACCESS_KEY']
         aws.secret_access_key = ENV['AWS_SECRET_KEY']
         aws.keypair_name = ENV['AWS_KEYNAME']
@@ -222,7 +221,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    end
 
    ambari.vm.provider "aws" do |aws, override|
-     aws.name = AMBARI_VM_NAME
      aws.access_key_id = ENV['AWS_ACCESS_KEY']
      aws.secret_access_key = ENV['AWS_SECRET_KEY']
      aws.keypair_name = ENV['AWS_KEYNAME']
