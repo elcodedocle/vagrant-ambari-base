@@ -165,7 +165,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         aws.keypair_name = ENV['AWS_KEYNAME']
         aws.ami = AWS_AMI
         aws.instance_type = AWS_AMBARI_INSTANCE_TYPE
-        aws.region = ENV['AWS_REGION']
+        aws.region = AWS_REGION
         aws.security_groups = "Vagrant"
         override.ssh.username = AWS_SSH_USERNAME
         override.ssh.private_key_path = ENV['AWS_KEYPATH']
@@ -228,7 +228,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      aws.keypair_name = ENV['AWS_KEYNAME']
      aws.ami = AWS_AMI
      aws.instance_type = AWS_INSTANCE_TYPE
-     aws.region = ENV['AWS_REGION']
+     aws.region = AWS_REGION
      aws.security_groups = "Vagrant"
      override.ssh.username = AWS_SSH_USERNAME
      override.ssh.private_key_path = ENV['AWS_KEYPATH']
