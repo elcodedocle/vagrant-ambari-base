@@ -33,6 +33,7 @@ AWS_SSH_USERNAME = "centos"
 # Ambari host will have also a randomly assigned public ip
 # (If you want to associate your own elastic ip check elastic_ip parameter)
 AWS_VPC_SUBNET_ID = "subnet-c8620c90"
+AWS_VPC_SECURITY_GROUP_ID = "sg-1301c268"
 AWS_AMBARI_EBS_DISK_SIZE_GB = 100
 AWS_NODE_EBS_DISK_SIZE_GB = 200
 
@@ -165,7 +166,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         aws.ami = AWS_AMI
         aws.instance_type = AWS_AMBARI_INSTANCE_TYPE
         aws.region = AWS_REGION
-        aws.security_groups = "Vagrant"
+        aws.security_groups = AWS_VPC_SECURITY_GROUP_ID
         override.ssh.username = AWS_SSH_USERNAME
         override.ssh.private_key_path = ENV['AWS_KEYPATH']
         aws.subnet_id = AWS_VPC_SUBNET_ID
@@ -227,7 +228,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      aws.ami = AWS_AMI
      aws.instance_type = AWS_INSTANCE_TYPE
      aws.region = AWS_REGION
-     aws.security_groups = "Vagrant"
+     aws.security_groups = AWS_VPC_SECURITY_GROUP_ID
      override.ssh.username = AWS_SSH_USERNAME
      override.ssh.private_key_path = ENV['AWS_KEYPATH']
      aws.subnet_id = AWS_VPC_SUBNET_ID
