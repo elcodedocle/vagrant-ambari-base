@@ -171,7 +171,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         override.ssh.private_key_path = ENV['AWS_KEYPATH']
         aws.subnet_id = AWS_VPC_SUBNET_ID
         aws.private_ip_address = "10.7.0.#{i + 91}"
-        aws.associate_public_ip = false
+        aws.associate_public_ip = true
         aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_NODE_EBS_DISK_SIZE_GB }]
       end
       
