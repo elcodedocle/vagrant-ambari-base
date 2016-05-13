@@ -5,7 +5,7 @@
 You can create your own blueprint file and select it through the [Vagrantfile](../Vagrantfile) `BLUEPRINT_FILE_NAME` property. 
 
 ###### Host Mapping
-> Tells Ambari which blueprint it shoud use and which host should be in which host group. With the attribute `blueprint` you can define the name of the blueprint. Then you can define the hosts of each host group. e.g. we define the host `sg1.localdomain` to be in `host_group_1` of `blueprint-c1` 
+> Tells Ambari which blueprint it shoud use and which host should be in which host group. With the attribute `blueprint` you can define the name of the blueprint. Then you can define the hosts of each host group. e.g. we define the host `sg1.imatiasl.lan` to be in `host_group_1` of `blueprint-c1` 
 
 You can build your own host-mapping file and select it through the [Vagrantfile](../Vagrantfile) `HOST_MAPPING_FILE_NAME` property. 
 
@@ -17,8 +17,8 @@ _Note: All custom `blueprints` and `host-mapping` files must be stored in the `/
 #### Host Mapping Name Convention
 To simplify the Vagrantfile the following hostname convention is enforced:
 
-* Ambari hostname - defaults to `ambari.localdomain`. You can override the `ambari` prefix via the [Vagrantfile](../Vagrantfile) `AMBARI_HOSTNAME_PREFIX`property. The domain is fixed to `.localdomain`. 
-* Cluster hostnames - cluster nodes are named like this: `sg<NodeIndex>.localdomain`. For a cluster with N nodes, the hostnames are: `sg1.localdomain` ... `sgN.localdomain`. Index starts from `1` and increments consecutively (**no gaps**) to N. `N` is the size of the cluster excluding the Ambari node.
+* Ambari hostname - defaults to `ambari.imatiasl.lan`. You can override the `ambari` prefix via the [Vagrantfile](../Vagrantfile) `AMBARI_HOSTNAME_PREFIX`property. The domain is fixed to `.imatiasl.lan`. 
+* Cluster hostnames - cluster nodes are named like this: `sg<NodeIndex>.imatiasl.lan`. For a cluster with N nodes, the hostnames are: `sg1.imatiasl.lan` ... `sgN.imatiasl.lan`. Index starts from `1` and increments consecutively (**no gaps**) to N. `N` is the size of the cluster excluding the Ambari node.
 
 Follow this convention in your **Host Mapping** specs or Vagrantfile will not be able to provision the required VMs. If you alter the Ambari name make sure it does not overlap with any of the cluster node names. 
 
