@@ -39,6 +39,10 @@ vagrant up
 
 Check out the provided [NOTICE](NOTICE) file.
 
+### Extras
+
+- [Hue installation tutorial](http://gethue.com/hadoop-hue-3-on-hdp-installation-tutorial/)
+
 
 Enjoy!
 
