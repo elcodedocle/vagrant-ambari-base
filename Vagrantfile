@@ -11,6 +11,8 @@ require 'json'
 #    CONFIG PARAMETERS
 ###############################################################################
 
+# This only affects su and ssh commands on shell provision scripts.
+# Tipycally, use "centos" for aws provider, "vagrant" for virtualbox or vmware providers
 VAGRANT_USER = "centos"
 
 # Note for AWS launch (provider set to aws) vagrant aws plugin 
