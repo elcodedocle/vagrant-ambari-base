@@ -4,7 +4,7 @@ cp /vagrant/id_rsa.pub /home/vagrant/.ssh/
 cp /vagrant/id_rsa /home/vagrant/.ssh/
 chown vagrant:vagrant /home/vagrant/.ssh/id_rsa*
 chmod 400 /home/vagrant/.ssh/id_rsa
-cat /vagrant/id_rsa.pub | cat >> ~/.ssh/authorized_keys
+cat /vagrant/id_rsa.pub | cat >> /home/vagrant/.ssh/authorized_keys
  
 rpm -ivh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
  
