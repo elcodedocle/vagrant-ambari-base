@@ -4,19 +4,21 @@ AMBARI_HOSTNAME=$1
 AMBARI_HOSTNAME_FQDN=$2
 NUMBER_OF_CLUSTER_NODES=$3
 
-sudo su
+EATME=1
+
+while [$EATME]; do
 
 yum clean all
 rm -Rf /var/cache/yum/x86_64/6/
-yum -y update || :
-yum -y install mysql-connector-java || :
+yum -y update
+yum -y install mysql-connector-java
  
-yum -y install nc expect ed ntp dmidecode pciutils || :
+yum -y install nc expect ed ntp dmidecode pciutils
 
-/etc/init.d/ntpd stop; || :
+/etc/init.d/ntpd stop;
 mv /etc/localtime /etc/localtime.bak; 
 ln -s /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime; 
-/etc/init.d/ntpd start || :
+/etc/init.d/ntpd start
 
 # Create and set the hosts file like:
 #
@@ -37,12 +39,14 @@ for i in $(eval echo {1..$NUMBER_OF_CLUSTER_NODES}); do
    echo "10.7.0.$((91 + $i)) sg$i.imatiasl.lan sg$i" >> /etc/hosts 
 done
 
-cp /vagrant/id_rsa.pub /home/vagrant/.ssh/ || :
-cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys || :
+cp /vagrant/id_rsa.pub /home/vagrant/.ssh/
+cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
 
-/etc/init.d/iptables stop || :
-chkconfig iptables off || :
-echo "umask 022" >> /etc/profile || :
-echo "echo 'never' > /sys/kernel/mm/redhat_transparent_hugepage/defrag" >> /etc/rc.local || :
-echo "echo 'never' > /sys/kernel/mm/redhat_transparent_hugepage/enabled" >> /etc/rc.local || :
-source /etc/rc.local || :
+/etc/init.d/iptables stop
+chkconfig iptables off
+echo "umask 022" >> /etc/profile
+echo "echo 'never' > /sys/kernel/mm/redhat_transparent_hugepage/defrag" >> /etc/rc.local
+echo "echo 'never' > /sys/kernel/mm/redhat_transparent_hugepage/enabled" >> /etc/rc.local
+source /etc/rc.local
+EATME=0
+done
