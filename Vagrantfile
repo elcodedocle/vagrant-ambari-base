@@ -90,7 +90,7 @@ INSTALL_AMBARI_STACK = {
   "HDP2.4" => "provision/install_ambari.sh"
 }
 
-AMBARI_HOSTNAME_FQDN = "#{AMBARI_HOSTNAME_PREFIX}.localdomain"
+AMBARI_HOSTNAME_FQDN = "#{AMBARI_HOSTNAME_PREFIX}.imatiasl.lan"
 
 # Parse the blueprint spec
 blueprint_spec = JSON.parse(open("blueprints/" + BLUEPRINT_FILE_NAME).read)
@@ -140,7 +140,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     hdp_vm_name = "sg#{i}"
     
-    hdp_host_name = "sg#{i}.localdomain"
+    hdp_host_name = "sg#{i}.imatiasl.lan"
     
     config.vm.define hdp_vm_name.to_sym do |hdp_conf|
       

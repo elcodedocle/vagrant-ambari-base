@@ -6,7 +6,7 @@ NUMBER_OF_CLUSTER_NODES=$3
 
 EATME=1
 
-while [$EATME]; do
+while [$EATME -gt 0]; do
 
 yum clean all
 rm -Rf /var/cache/yum/x86_64/6/
