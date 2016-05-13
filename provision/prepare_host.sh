@@ -3,6 +3,7 @@
 AMBARI_HOSTNAME=$1
 AMBARI_HOSTNAME_FQDN=$2
 NUMBER_OF_CLUSTER_NODES=$3
+VAGRANT_USER=$4
 
 EATME=1
 
@@ -15,10 +16,10 @@ yum -y install mysql-connector-java
  
 yum -y install nc expect ed ntp dmidecode pciutils
 
-/etc/init.d/ntpd stop;
+systemctl stop ntpd;
 mv /etc/localtime /etc/localtime.bak; 
 ln -s /usr/share/zoneinfo/Europe/Madrid /etc/localtime; 
-/etc/init.d/ntpd start
+systemctl start ntpd;
 
 # Create and set the hosts file like:
 #
@@ -39,14 +40,14 @@ for i in $(eval echo {1..$NUMBER_OF_CLUSTER_NODES}); do
    echo "10.7.0.$((91 + $i)) sg$i.imatiasl.lan sg$i" >> /etc/hosts 
 done
 
-cp /vagrant/id_rsa.pub /home/$1/.ssh/
-cat /home/$1/.ssh/id_rsa.pub >> /home/$1/.ssh/authorized_keys
+cp /vagrant/id_rsa.pub /home/$VAGRANT_USER/.ssh/
+cat /home/$1/.ssh/id_rsa.pub >> /home/$VAGRANT_USER/.ssh/authorized_keys
 
-systemctl disable firewalld
-systemctl stop firewalld
 echo "umask 022" >> /etc/profile
-echo "echo 'never' > /sys/kernel/mm/redhat_transparent_hugepage/defrag" >> /etc/rc.local
-echo "echo 'never' > /sys/kernel/mm/redhat_transparent_hugepage/enabled" >> /etc/rc.local
+echo "echo 'never' > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
+echo "echo 'never' > /sys/kernel/mm/transparent_hugepage/enabled" >> /etc/rc.local
 source /etc/rc.local
+
 EATME=0
+
 done
