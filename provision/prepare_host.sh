@@ -15,10 +15,10 @@ yum -y install mysql-connector-java
  
 yum -y install nc expect ed ntp dmidecode pciutils
 
-/etc/init.d/ntpd stop;
+systemctl stop ntpd;
 mv /etc/localtime /etc/localtime.bak; 
 ln -s /usr/share/zoneinfo/Europe/Madrid /etc/localtime; 
-/etc/init.d/ntpd start
+systemctl start ntpd;
 
 # Create and set the hosts file like:
 #
