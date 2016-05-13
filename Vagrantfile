@@ -117,7 +117,7 @@ if (BLUEPRINT_NAME != HOST_MAPPING_BLUEPRINT_NAME)
   exit
 end
 
-# List of cluster node hostnames. Convention is: 'sg<Number>.localdomain'
+# List of cluster node hostnames. Convention is: 'sg<Number>.imatiasl.lan'
 NODES = Set.new([])
 
 # Extract the cluster hostnames from the blueprint host mapping file
@@ -197,14 +197,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       hdp_conf.vm.host_name = hdp_host_name
       # will be ignored by aws provider (use aws.private_ip_address instead):
       hdp_conf.vm.network :private_network, ip: "10.7.0.#{i + 91}"
+  
+      #Fix hostname FQDN
+      hdp_conf.vm.provision :shell, :inline => "hostname #{hdp_host_name}"
 
       hdp_conf.vm.provision "shell" do |s|
         s.path = "provision/prepare_host.sh"
         s.args = [AMBARI_HOSTNAME_PREFIX, AMBARI_HOSTNAME_FQDN, NUMBER_OF_CLUSTER_NODES]
       end
-  
-      #Fix hostname FQDN
-      hdp_conf.vm.provision :shell, :inline => "hostname #{hdp_host_name}"
     end
   end
 
@@ -267,6 +267,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    ambari.vm.network :private_network, ip: "10.7.0.91" 
 #   ambari.vm.network :forwarded_port, guest: 8080, host: 8080
 
+   # Fix hostname FQDN
+   ambari.vm.provision :shell, :inline => "hostname " + AMBARI_HOSTNAME_FQDN
+
    # Initialization common for all nodes
    ambari.vm.provision "shell" do |s|
      s.path = "provision/prepare_host.sh"
@@ -288,9 +291,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      s.path = "provision/register_agents.sh"
      s.args = NUMBER_OF_CLUSTER_NODES
    end
-
-   # Fix hostname FQDN
-   ambari.vm.provision :shell, :inline => "hostname " + AMBARI_HOSTNAME_FQDN
 
    # Deploy Hadoop Cluster & Services as defined in the Blueprint/Host-Mapping files
    if (DEPLOY_BLUEPRINT_CLUSTER)
