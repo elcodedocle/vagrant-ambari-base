@@ -19,7 +19,9 @@
         "hadoop.proxyuser.hcat.groups" : "*",
         "hadoop.proxyuser.hcat.hosts" : "*",
         "hadoop.proxyuser.hive.groups" : "*",
-        "hadoop.proxyuser.hive.hosts" : "*"
+        "hadoop.proxyuser.hive.hosts" : "*",
+        "hadoop.proxyuser.oozie.groups" : "*",
+        "hadoop.proxyuser.oozie.hosts" : "*"
       }
     },
     {
@@ -44,6 +46,7 @@
         {"name" : "SPARK_CLIENT"},
         {"name" : "YARN_CLIENT"},
         {"name" : "HDFS_CLIENT"},
+        {"name" : "OOZIE_CLIENT"},
         {"name" : "SQOOP"},
         {"name" : "HBASE_MASTER"},
         {"name" : "NAMENODE"},
@@ -72,6 +75,7 @@
         {"name" : "SPARK_CLIENT"},
         {"name" : "YARN_CLIENT"},
         {"name" : "HDFS_CLIENT"},
+        {"name" : "OOZIE_CLIENT"},
         {"name" : "HIVE_SERVER"},
         {"name" : "SQOOP"},
         {"name" : "MYSQL_SERVER"},
@@ -88,6 +92,7 @@
         {"name" : "HBASE_REGIONSERVER"},
         {"name" : "DATANODE"},
         {"name" : "HBASE_CLIENT"},
+        {"name" : "OOZIE_SERVER"},
         {"name" : "APP_TIMELINE_SERVER"},
         {"name" : "FLUME_HANDLER"},
         {"name" : "HIVE_CLIENT"},
