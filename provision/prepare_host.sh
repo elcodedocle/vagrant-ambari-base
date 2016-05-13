@@ -42,8 +42,8 @@ done
 cp /vagrant/id_rsa.pub /home/vagrant/.ssh/
 cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
 
-/etc/init.d/iptables stop
-chkconfig iptables off
+systemctl disable firewalld
+systemctl stop firewalld
 echo "umask 022" >> /etc/profile
 echo "echo 'never' > /sys/kernel/mm/redhat_transparent_hugepage/defrag" >> /etc/rc.local
 echo "echo 'never' > /sys/kernel/mm/redhat_transparent_hugepage/enabled" >> /etc/rc.local
