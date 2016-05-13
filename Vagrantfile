@@ -11,6 +11,8 @@ require 'json'
 #    CONFIG PARAMETERS
 ###############################################################################
 
+VAGRANT_USER = "centos"
+
 # Note for AWS launch (provider set to aws) vagrant aws plugin 
 # ( https://github.com/mitchellh/vagrant-aws ) 
 # must be installed and the following environment variables must be set:
@@ -27,7 +29,7 @@ AWS_AMI = "ami-6d1c2007"
 AWS_AMBARI_INSTANCE_TYPE = "m4.large"
 # Must be EBS-based. 8GB RAM, 2 vCores minimum recommended
 AWS_INSTANCE_TYPE = "m4.large"
-AWS_SSH_USERNAME = "centos"
+AWS_SSH_USERNAME = VAGRANT_USER
 # The AWS VPC subnet where the cluster will be deployed. 
 # It should be configured with CIDR mask 10.7.0.0/24
 # Ambari host will have also a randomly assigned public ip
@@ -289,7 +291,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    # Register the Ambari Agents and all nodes
    ambari.vm.provision "shell" do |s|
      s.path = "provision/register_agents.sh"
-     s.args = NUMBER_OF_CLUSTER_NODES
+     s.args = [NUMBER_OF_CLUSTER_NODES, VAGRANT_USER]
    end
 
    # Deploy Hadoop Cluster & Services as defined in the Blueprint/Host-Mapping files
