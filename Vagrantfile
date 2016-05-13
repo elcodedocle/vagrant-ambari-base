@@ -11,6 +11,10 @@ require 'json'
 #    CONFIG PARAMETERS
 ###############################################################################
 
+# This only affects su and ssh commands on shell provision scripts.
+# Tipycally, use "centos" for aws provider, "vagrant" for virtualbox or vmware providers
+VAGRANT_USER = "centos"
+
 # Note for AWS launch (provider set to aws) vagrant aws plugin 
 # ( https://github.com/mitchellh/vagrant-aws ) 
 # must be installed and the following environment variables must be set:
@@ -27,12 +31,13 @@ AWS_AMI = "ami-6d1c2007"
 AWS_AMBARI_INSTANCE_TYPE = "m4.large"
 # Must be EBS-based. 8GB RAM, 2 vCores minimum recommended
 AWS_INSTANCE_TYPE = "m4.large"
-AWS_SSH_USERNAME = "centos"
+AWS_SSH_USERNAME = VAGRANT_USER
 # The AWS VPC subnet where the cluster will be deployed. 
 # It should be configured with CIDR mask 10.7.0.0/24
 # Ambari host will have also a randomly assigned public ip
 # (If you want to associate your own elastic ip check elastic_ip parameter)
 AWS_VPC_SUBNET_ID = "subnet-c8620c90"
+AWS_VPC_SECURITY_GROUP_ID = "sg-1301c268"
 AWS_AMBARI_EBS_DISK_SIZE_GB = 100
 AWS_NODE_EBS_DISK_SIZE_GB = 200
 
@@ -54,7 +59,7 @@ CLUSTER_NAME = "CLUSTER_SG"
 # - andytson/aws-dummy
 # For Proxmox:
 # - See https://github.com/telcat/vagrant-proxmox/tree/master/dummy_box
-VM_BOX = "bento/centos-7.2"
+VM_BOX = "andytson/aws-dummy"
 VM_BOOT_TIMEOUT = 900
 
 #Memory allocated for the AMBARI VM
@@ -89,7 +94,7 @@ INSTALL_AMBARI_STACK = {
   "HDP2.4" => "provision/install_ambari.sh"
 }
 
-AMBARI_HOSTNAME_FQDN = "#{AMBARI_HOSTNAME_PREFIX}.localdomain"
+AMBARI_HOSTNAME_FQDN = "#{AMBARI_HOSTNAME_PREFIX}.imatiasl.lan"
 
 # Parse the blueprint spec
 blueprint_spec = JSON.parse(open("blueprints/" + BLUEPRINT_FILE_NAME).read)
@@ -116,7 +121,7 @@ if (BLUEPRINT_NAME != HOST_MAPPING_BLUEPRINT_NAME)
   exit
 end
 
-# List of cluster node hostnames. Convention is: 'sg<Number>.localdomain'
+# List of cluster node hostnames. Convention is: 'sg<Number>.imatiasl.lan'
 NODES = Set.new([])
 
 # Extract the cluster hostnames from the blueprint host mapping file
@@ -139,7 +144,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     hdp_vm_name = "sg#{i}"
     
-    hdp_host_name = "sg#{i}.localdomain"
+    hdp_host_name = "sg#{i}.imatiasl.lan"
     
     config.vm.define hdp_vm_name.to_sym do |hdp_conf|
       
@@ -159,26 +164,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
       
       hdp_conf.vm.provider :aws do |aws, override|
-        aws.name = hdp_vm_name
         aws.access_key_id = ENV['AWS_ACCESS_KEY']
         aws.secret_access_key = ENV['AWS_SECRET_KEY']
         aws.keypair_name = ENV['AWS_KEYNAME']
         aws.ami = AWS_AMI
         aws.instance_type = AWS_AMBARI_INSTANCE_TYPE
-        aws.region = ENV['AWS_REGION']
-        aws.security_groups = "Vagrant"
+        aws.region = AWS_REGION
+        aws.security_groups = AWS_VPC_SECURITY_GROUP_ID
         override.ssh.username = AWS_SSH_USERNAME
         override.ssh.private_key_path = ENV['AWS_KEYPATH']
         aws.subnet_id = AWS_VPC_SUBNET_ID
         aws.private_ip_address = "10.7.0.#{i + 91}"
-        aws.associate_public_ip = false
+        aws.elastic_ip = true
         aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_NODE_EBS_DISK_SIZE_GB }]
+        aws.user_data = File.read("user_data.txt")
       end
       
       config.vm.provider :proxmox do |proxmox|
-        proxmox.endpoint = env['PROXMOX_ENDPOINT']
-        proxmox.user_name = env['PROXMOX_USER_NAME']
-        proxmox.password = env['PROXMOX_PASSWORD']
+        proxmox.endpoint = ENV['PROXMOX_ENDPOINT']
+        proxmox.user_name = ENV['PROXMOX_USER_NAME']
+        proxmox.password = ENV['PROXMOX_PASSWORD']
         proxmox.vm_memory = HDP_NODE_VM_MEMORY_MB
         proxmox.qemu_disk_size = PROXMOX_NODE_DISK_SIZE
         proxmox.vm_name_prefix = CLUSTER_NAME + '_'
@@ -196,14 +201,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       hdp_conf.vm.host_name = hdp_host_name
       # will be ignored by aws provider (use aws.private_ip_address instead):
       hdp_conf.vm.network :private_network, ip: "10.7.0.#{i + 91}"
-
-      hdp_conf.vm.provision "shell" do |s|
-        s.path = "provision/prepare_host.sh"
-        s.args = [AMBARI_HOSTNAME_PREFIX, AMBARI_HOSTNAME_FQDN, NUMBER_OF_CLUSTER_NODES]
-      end
   
       #Fix hostname FQDN
       hdp_conf.vm.provision :shell, :inline => "hostname #{hdp_host_name}"
+
+      hdp_conf.vm.provision "shell" do |s|
+        s.path = "provision/prepare_host.sh"
+        s.args = [AMBARI_HOSTNAME_PREFIX, AMBARI_HOSTNAME_FQDN, NUMBER_OF_CLUSTER_NODES, VAGRANT_USER]
+      end
     end
   end
 
@@ -221,27 +226,27 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
      v.customize ["modifyvm", :id, "--memory", AMBARI_NODE_VM_MEMORY_MB]
    end
 
-   ambari.vm.provider "aws" do |v||aws, override|
-     aws.name = AMBARI_VM_NAME
+   ambari.vm.provider "aws" do |aws, override|
      aws.access_key_id = ENV['AWS_ACCESS_KEY']
      aws.secret_access_key = ENV['AWS_SECRET_KEY']
      aws.keypair_name = ENV['AWS_KEYNAME']
      aws.ami = AWS_AMI
      aws.instance_type = AWS_INSTANCE_TYPE
-     aws.region = ENV['AWS_REGION']
-     aws.security_groups = "Vagrant"
+     aws.region = AWS_REGION
+     aws.security_groups = AWS_VPC_SECURITY_GROUP_ID
      override.ssh.username = AWS_SSH_USERNAME
      override.ssh.private_key_path = ENV['AWS_KEYPATH']
      aws.subnet_id = AWS_VPC_SUBNET_ID
      aws.private_ip_address = "10.7.0.91"
-     aws.associate_public_ip = true
+     aws.elastic_ip = true
      aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => AWS_AMBARI_EBS_DISK_SIZE_GB }]
+     aws.user_data = File.read("user_data.txt")
    end
       
     config.vm.provider :proxmox do |proxmox|
-      proxmox.endpoint = env['PROXMOX_ENDPOINT']
-      proxmox.user_name = env['PROXMOX_USER_NAME']
-      proxmox.password = env['PROXMOX_PASSWORD']
+      proxmox.endpoint = ENV['PROXMOX_ENDPOINT']
+      proxmox.user_name = ENV['PROXMOX_USER_NAME']
+      proxmox.password = ENV['PROXMOX_PASSWORD']
       proxmox.vm_memory = AMBARI_NODE_VM_MEMORY_MB
       proxmox.qemu_disk_size = PROXMOX_AMBARI_DISK_SIZE
       proxmox.vm_name_prefix = CLUSTER_NAME + '_AMBARI_'
@@ -266,15 +271,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    ambari.vm.network :private_network, ip: "10.7.0.91" 
 #   ambari.vm.network :forwarded_port, guest: 8080, host: 8080
 
+   # Fix hostname FQDN
+   ambari.vm.provision :shell, :inline => "hostname " + AMBARI_HOSTNAME_FQDN
+
    # Initialization common for all nodes
    ambari.vm.provision "shell" do |s|
      s.path = "provision/prepare_host.sh"
-     s.args = [AMBARI_HOSTNAME_PREFIX, AMBARI_HOSTNAME_FQDN, NUMBER_OF_CLUSTER_NODES]
+     s.args = [AMBARI_HOSTNAME_PREFIX, AMBARI_HOSTNAME_FQDN, NUMBER_OF_CLUSTER_NODES, VAGRANT_USER]
    end
    
    # Install Ambari Server
    ambari.vm.provision "shell" do |s|
      s.path = AMBARI_PROVISION_SCRIPT
+     s.args = [VAGRANT_USER]
    end
 
    # Install Redis (Used as Spring XD transport)
@@ -285,11 +294,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    # Register the Ambari Agents and all nodes
    ambari.vm.provision "shell" do |s|
      s.path = "provision/register_agents.sh"
-     s.args = NUMBER_OF_CLUSTER_NODES
+     s.args = [NUMBER_OF_CLUSTER_NODES, VAGRANT_USER]
    end
-
-   # Fix hostname FQDN
-   ambari.vm.provision :shell, :inline => "hostname " + AMBARI_HOSTNAME_FQDN
 
    # Deploy Hadoop Cluster & Services as defined in the Blueprint/Host-Mapping files
    if (DEPLOY_BLUEPRINT_CLUSTER)

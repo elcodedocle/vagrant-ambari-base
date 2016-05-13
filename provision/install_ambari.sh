@@ -1,10 +1,10 @@
 #!/bin/bash
 
-cp /vagrant/id_rsa.pub /home/vagrant/.ssh/
-cp /vagrant/id_rsa /home/vagrant/.ssh/
-chown vagrant:vagrant /home/vagrant/.ssh/id_rsa*
-chmod 400 /home/vagrant/.ssh/ir_dsa
-cat /vagrant/id_rsa.pub | cat >> ~/.ssh/authorized_keys
+cp /vagrant/id_rsa.pub /home/$1/.ssh/
+cp /vagrant/id_rsa /home/$1/.ssh/
+chown $1:$1 /home/$1/.ssh/id_rsa*
+chmod 400 /home/$1/.ssh/id_rsa
+cat /vagrant/id_rsa.pub | cat >> /home/$1/.ssh/authorized_keys
  
 rpm -ivh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
  
@@ -36,8 +36,8 @@ yum -y install spring-xd-plugin-hdp
 ambari-server setup -s
 ambari-server start
 
-#curl --user admin:admin -H 'X-Requested-By:ambari' -X GET http://ambari.localdomain:8080/api/v1/stacks/HDP/versions/2.4
-while [ -n "$(curl --user admin:admin -H 'X-Requested-By:ambari' -X GET http://ambari.localdomain:8080/api/v1/stacks/HDP/versions/2.4)" ]; do
+#curl --user admin:admin -H 'X-Requested-By:ambari' -X GET http://ambari.imatiasl.lan:8080/api/v1/stacks/HDP/versions/2.4
+while [ -n "$(curl --user admin:admin -H 'X-Requested-By:ambari' -X GET http://ambari.imatiasl.lan:8080/api/v1/stacks/HDP/versions/2.4)" ]; do
   echo "Try again..."
   sleep 2
 done
@@ -46,5 +46,5 @@ sleep 15
 
 python /vagrant/provision/SetRepos.py HDP 2.4
 
-curl --user admin:admin -H 'X-Requested-By:ambari' -X GET http://ambari.localdomain:8080/api/v1/stacks/HDP/versions/2.4/operating_systems/redhat7/repositories
+curl --user admin:admin -H 'X-Requested-By:ambari' -X GET http://ambari.imatiasl.lan:8080/api/v1/stacks/HDP/versions/2.4/operating_systems/redhat7/repositories
 
