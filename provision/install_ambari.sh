@@ -1,10 +1,10 @@
 #!/bin/bash
 
-cp /vagrant/id_rsa.pub /home/vagrant/.ssh/
-cp /vagrant/id_rsa /home/vagrant/.ssh/
-chown vagrant:vagrant /home/vagrant/.ssh/id_rsa*
-chmod 400 /home/vagrant/.ssh/id_rsa
-cat /vagrant/id_rsa.pub | cat >> /home/vagrant/.ssh/authorized_keys
+cp /vagrant/id_rsa.pub /home/$1/.ssh/
+cp /vagrant/id_rsa /home/$1/.ssh/
+chown $1:$1 /home/$1/.ssh/id_rsa*
+chmod 400 /home/$1/.ssh/id_rsa
+cat /vagrant/id_rsa.pub | cat >> /home/$1/.ssh/authorized_keys
  
 rpm -ivh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
  

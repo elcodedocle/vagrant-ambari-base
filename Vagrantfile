@@ -207,7 +207,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
       hdp_conf.vm.provision "shell" do |s|
         s.path = "provision/prepare_host.sh"
-        s.args = [AMBARI_HOSTNAME_PREFIX, AMBARI_HOSTNAME_FQDN, NUMBER_OF_CLUSTER_NODES]
+        s.args = [AMBARI_HOSTNAME_PREFIX, AMBARI_HOSTNAME_FQDN, NUMBER_OF_CLUSTER_NODES, VAGRANT_USER]
       end
     end
   end
@@ -277,12 +277,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    # Initialization common for all nodes
    ambari.vm.provision "shell" do |s|
      s.path = "provision/prepare_host.sh"
-     s.args = [AMBARI_HOSTNAME_PREFIX, AMBARI_HOSTNAME_FQDN, NUMBER_OF_CLUSTER_NODES]
+     s.args = [AMBARI_HOSTNAME_PREFIX, AMBARI_HOSTNAME_FQDN, NUMBER_OF_CLUSTER_NODES, VAGRANT_USER]
    end
    
    # Install Ambari Server
    ambari.vm.provision "shell" do |s|
      s.path = AMBARI_PROVISION_SCRIPT
+     s.args = [VAGRANT_USER]
    end
 
    # Install Redis (Used as Spring XD transport)

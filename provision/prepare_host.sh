@@ -39,8 +39,8 @@ for i in $(eval echo {1..$NUMBER_OF_CLUSTER_NODES}); do
    echo "10.7.0.$((91 + $i)) sg$i.imatiasl.lan sg$i" >> /etc/hosts 
 done
 
-cp /vagrant/id_rsa.pub /home/vagrant/.ssh/
-cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+cp /vagrant/id_rsa.pub /home/$1/.ssh/
+cat /home/$1/.ssh/id_rsa.pub >> /home/$1/.ssh/authorized_keys
 
 systemctl disable firewalld
 systemctl stop firewalld
