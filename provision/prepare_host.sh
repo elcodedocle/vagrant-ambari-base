@@ -17,7 +17,7 @@ yum -y install nc expect ed ntp dmidecode pciutils
 
 /etc/init.d/ntpd stop;
 mv /etc/localtime /etc/localtime.bak; 
-ln -s /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime; 
+ln -s /usr/share/zoneinfo/Europe/Madrid /etc/localtime; 
 /etc/init.d/ntpd start
 
 # Create and set the hosts file like:
