@@ -41,7 +41,7 @@ for i in $(eval echo {1..$NUMBER_OF_CLUSTER_NODES}); do
 done
 
 cp /vagrant/id_rsa.pub /home/$VAGRANT_USER/.ssh/
-cat /home/$1/.ssh/id_rsa.pub >> /home/$VAGRANT_USER/.ssh/authorized_keys
+cat /home/$VAGRANT_USER/.ssh/id_rsa.pub >> /home/$VAGRANT_USER/.ssh/authorized_keys
 
 echo "umask 022" >> /etc/profile
 echo "echo 'never' > /sys/kernel/mm/transparent_hugepage/defrag" >> /etc/rc.local
