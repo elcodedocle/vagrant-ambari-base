@@ -20,7 +20,7 @@ Depending on configuration settings, per node*:
 ### How to use
  - Clone the repo:
 ```bash
-git clone https://bitbucket.org/imatia/vagrant-ambari-base
+git clone https://github.com/elcodedocle/vagrant-ambari-base
 ```
  - Generate a keypair on the project root folder:
 ```bash
